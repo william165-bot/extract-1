@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title><%= title %> • <%= brand %></title>
+  <link rel="stylesheet" href="/styles.css" />
+  <style>:root{--crop-top:<%= cropTop %>px}</style>
+</head>
+<body>
+  <header class="header">
+    <div class="brand">
+      <span>🕸️</span>
+      <span><%= brand %></span>
+      <span class="badge">Fast URL Extractor</span>
+    </div>
+    <nav class="nav">
+      <% if (user) { %>
+        <a class="btn" href="/app">App</a>
+        <a class="btn" href="/upgrade">Upgrade</a>
+        <form action="/logout" method="post" style="display:inline"><button class="btn danger" type="submit">Logout</button></form>
+      <% } else { %>
+        <a class="btn" href="/signin">Sign in</a>
+        <a class="btn primary" href="/signup">Create account</a>
+      <% } %>
+    </nav>
+  </header>
+  <main class="container">
+    <%- include('partials/flash') %>
+    <%- body %>
+  </main>
+  <footer class="footer">
+    <div>© <%= new Date().getFullYear() %> <%= brand %>. Use responsibly and only download content you have rights to.</div>
+    <div class="small">Admin: /admin</div>
+  </footer>
+</body>
+</html>
