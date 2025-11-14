@@ -1,0 +1,24 @@
+<section class="grid cols-2">
+  <div class="card">
+    <h2 class="title">Admin Login</h2>
+    <p class="subtitle">Restricted access.</p>
+    <form action="/admin/login" method="post" class="grid" style="gap:12px">
+      <div>
+        <label class="label" for="username">Username</label>
+        <input class="input" id="username" name="username" required />
+      </div>
+      <div>
+        <label class="label" for="password">Password</label>
+        <input class="input" id="password" name="password" type="password" required />
+      </div>
+      <div class="form-actions">
+        <button class="btn primary" type="submit">Login</button>
+        <a class="btn" href="/">Back</a>
+      </div>
+    </form>
+  </div>
+  <div class="card">
+    <h3 class="title">Credentials</h3>
+    <p class="small">Use the configured admin credentials to access the dashboard.</p>
+  </div>
+</section>
