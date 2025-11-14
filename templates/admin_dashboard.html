@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Nethunt URL Extractor{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap;">
+        <div>
+            <h2 style="color: #333;">🔐 Admin Dashboard</h2>
+            <p style="color: #666; margin-top: 5px;">Manage users and premium access</p>
+        </div>
+        <div>
+            <a href="{{ url_for('admin_logout') }}" class="btn btn-danger">Logout</a>
+        </div>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px; text-align: center;">
+            <h3 style="font-size: 2rem; margin-bottom: 5px;">{{ users|length }}</h3>
+            <p style="margin: 0;">Total Users</p>
+        </div>
+        
+        <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 20px; border-radius: 10px; text-align: center;">
+            <h3 style="font-size: 2rem; margin-bottom: 5px;">{{ users|selectattr('is_premium')|list|length }}</h3>
+            <p style="margin: 0;">Premium Users</p>
+        </div>
+        
+        <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; padding: 20px; border-radius: 10px; text-align: center;">
+            <h3 style="font-size: 2rem; margin-bottom: 5px;">{{ users|selectattr('is_trial_active')|list|length }}</h3>
+            <p style="margin: 0;">Active Trials</p>
+        </div>
+        
+        <div style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; padding: 20px; border-radius: 10px; text-align: center;">
+            <h3 style="font-size: 2rem; margin-bottom: 5px;">${{ users|selectattr('is_premium')|list|length * 5 }}</h3>
+            <p style="margin: 0;">Est. Revenue</p>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h3 style="margin-bottom: 20px; color: #333;">👥 User Management</h3>
+    
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="background: #f8f9fa; border-bottom: 2px solid #e9ecef;">
+                    <th style="padding: 12px; text-align: left; color: #495057;">Email</th>
+                    <th style="padding: 12px; text-align: left; color: #495057;">Registered</th>
+                    <th style="padding: 12px; text-align: left; color: #495057;">Trial Status</th>
+                    <th style="padding: 12px; text-align: left; color: #495057;">Premium Status</th>
+                    <th style="padding: 12px; text-align: center; color: #495057;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr style="border-bottom: 1px solid #e9ecef;">
+                    <td style="padding: 12px; color: #333;">{{ user.email }}</td>
+                    <td style="padding: 12px; color: #666;">{{ user.created_at.strftime('%Y-%m-%d') }}</td>
+                    <td style="padding: 12px;">
+                        {% if user.is_trial_active() %}
+                            <span class="status-badge status-active">Active</span>
+                        {% else %}
+                            <span class="status-badge status-expired">Expired</span>
+                        {% endif %}
+                    </td>
+                    <td style="padding: 12px;">
+                        {% if user.is_premium_active() %}
+                            <span class="status-badge status-active">Premium ({{ user.premium_expires.strftime('%Y-%m-%d') }})</span>
+                        {% else %}
+                            <span class="status-badge status-expired">Not Premium</span>
+                        {% endif %}
+                    </td>
+                    <td style="padding: 12px; text-align: center;">
+                        {% if not user.is_premium_active() %}
+                            <a href="{{ url_for('grant_premium', user_id=user.id) }}" class="btn" style="padding: 6px 15px; font-size: 0.8rem; margin-right: 5px;">Grant Premium</a>
+                        {% else %}
+                            <a href="{{ url_for('revoke_premium', user_id=user.id) }}" class="btn btn-danger" style="padding: 6px 15px; font-size: 0.8rem;">Revoke</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    {% if users|length == 0 %}
+        <div style="text-align: center; padding: 40px; color: #666;">
+            <p style="font-size: 1.1rem;">No users registered yet.</p>
+            <p style="margin-top: 10px;">Users will appear here once they sign up.</p>
+        </div>
+    {% endif %}
+</div>
+
+<div class="card" style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);">
+    <h3 style="margin-bottom: 15px; color: #333;">⚙️ Quick Actions</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+        <button class="btn" onclick="exportUsers()" style="background: white; color: #333;">📊 Export Users</button>
+        <button class="btn" onclick="refreshStats()" style="background: white; color: #333;">🔄 Refresh Stats</button>
+        <button class="btn" onclick="viewLogs()" style="background: white; color: #333;">📋 View Logs</button>
+        <button class="btn btn-danger" onclick="confirmAction()" style="background: white; color: #dc3545; border: 1px solid #dc3545;">⚠️ Bulk Actions</button>
+    </div>
+</div>
+
+<div style="text-align: center; margin-top: 30px;">
+    <p style="color: #666;">Admin Panel v1.0 - Nethunt URL Extractor</p>
+    <p style="color: #999; font-size: 0.9rem;">© 2024 All rights reserved</p>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function exportUsers() {
+    alert('User export feature would download all user data as CSV file.');
+}
+
+function refreshStats() {
+    location.reload();
+}
+
+function viewLogs() {
+    alert('System logs would show recent admin actions and user activities.');
+}
+
+function confirmAction() {
+    if (confirm('Are you sure you want to perform bulk actions? This feature allows multiple user management at once.')) {
+        alert('Bulk action panel would open here for advanced operations.');
+    }
+}
+
+// Auto-refresh dashboard every 5 minutes
+setTimeout(function() {
+    location.reload();
+}, 300000);
+</script>
+{% endblock %}
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>

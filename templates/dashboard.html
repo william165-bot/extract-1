@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Nethunt URL Extractor{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap;">
+        <div>
+            <h2 style="color: #333;">Welcome, {{ current_user.email }}!</h2>
+            <p style="color: #666; margin-top: 5px;">Extract URLs from any social media platform</p>
+        </div>
+        <div style="text-align: right;">
+            <div style="margin-bottom: 10px;">
+                {% if trial_status %}
+                    <span class="status-badge status-active">🎯 Trial Active</span>
+                {% elif premium_status %}
+                    <span class="status-badge status-active">⭐ Premium Active</span>
+                {% else %}
+                    <span class="status-badge status-expired">⚠️ Access Expired</span>
+                {% endif %}
+            </div>
+            <a href="{{ url_for('logout') }}" class="btn btn-danger" style="padding: 8px 20px; font-size: 0.9rem;">Logout</a>
+        </div>
+    </div>
+    
+    {% if trial_status %}
+    <div class="premium-banner">
+        <h3>🎯 Your Free Trial is Active!</h3>
+        <p>Enjoy unlimited downloads for 24 hours. Upgrade to premium to continue using our service after your trial expires.</p>
+        <a href="{{ url_for('upgrade') }}" class="btn" style="background: white; color: #19547b; margin-top: 10px;">Upgrade to Premium Now</a>
+    </div>
+    {% endif %}
+    
+    {% if premium_status %}
+    <div class="premium-banner" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+        <h3>⭐ Premium Member!</h3>
+        <p>Enjoy unlimited access to all features. Your premium access expires in 30 days.</p>
+    </div>
+    {% endif %}
+</div>
+
+<div class="card" style="padding: 10px;">
+    <iframe 
+        src="https://getindevice.com/" 
+        class="embedded-site"
+        title="Nethunt URL Extractor Interface">
+    </iframe>
+</div>
+
+<div class="card">
+    <h3 style="margin-bottom: 20px; color: #333; text-align: center;">🚀 Quick Actions</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+        <div style="text-align: center; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+            <h4 style="color: #667eea; margin-bottom: 10px;">📺 YouTube Downloads</h4>
+            <p style="color: #666; font-size: 0.9rem; margin-bottom: 15px;">Download any YouTube video in HD quality</p>
+            <button class="btn btn-secondary" onclick="focusExtractor()" style="padding: 8px 20px; font-size: 0.9rem;">Get Started</button>
+        </div>
+        
+        <div style="text-align: center; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+            <h4 style="color: #667eea; margin-bottom: 10px;">📸 Instagram Content</h4>
+            <p style="color: #666; font-size: 0.9rem; margin-bottom: 15px;">Save Instagram posts, reels, and stories</p>
+            <button class="btn btn-secondary" onclick="focusExtractor()" style="padding: 8px 20px; font-size: 0.9rem;">Download Now</button>
+        </div>
+        
+        <div style="text-align: center; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+            <h4 style="color: #667eea; margin-bottom: 10px;">🎵 TikTok Videos</h4>
+            <p style="color: #666; font-size: 0.9rem; margin-bottom: 15px;">Extract trending TikTok videos instantly</p>
+            <button class="btn btn-secondary" onclick="focusExtractor()" style="padding: 8px 20px; font-size: 0.9rem;">Try It Now</button>
+        </div>
+        
+        <div style="text-align: center; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+            <h4 style="color: #667eea; margin-bottom: 10px;">📘 Facebook Videos</h4>
+            <p style="color: #666; font-size: 0.9rem; margin-bottom: 15px;">Download Facebook videos easily</p>
+            <button class="btn btn-secondary" onclick="focusExtractor()" style="padding: 8px 20px; font-size: 0.9rem;">Start Downloading</button>
+        </div>
+    </div>
+</div>
+
+<div style="text-align: center; margin-top: 30px;">
+    <p style="color: #666;">Need help? Contact our support team</p>
+    <p style="color: #999; font-size: 0.9rem;">© 2024 Nethunt URL Extractor. All rights reserved.</p>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function focusExtractor() {
+    const iframe = document.querySelector('.embedded-site');
+    iframe.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    iframe.focus();
+}
+
+// Check for trial expiration every minute
+setInterval(function() {
+    fetch('/dashboard')
+        .then(response => response.text())
+        .then(html => {
+            // Simple check - if user still has access, no redirect needed
+            // This is handled by Flask on the server side
+        })
+        .catch(error => console.log('Status check failed'));
+}, 60000);
+</script>
+{% endblock %}
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
