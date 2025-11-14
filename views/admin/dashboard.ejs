@@ -1,0 +1,65 @@
+<section class="grid" style="gap:18px">
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+      <h2 class="title">Admin Dashboard</h2>
+      <form action="/admin/logout" method="post"><button class="btn danger" type="submit">Logout</button></form>
+    </div>
+    <p class="subtitle">Manage users and premium access.</p>
+  </div>
+
+  <div class="card">
+    <h3 class="title">Active Premium</h3>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Email</th>
+          <th>Premium until</th>
+        </tr>
+      </thead>
+      <tbody>
+      <% if (paidUsers.length === 0) { %>
+        <tr><td colspan="3" class="small">No active premium users.</td></tr>
+      <% } %>
+      <% paidUsers.forEach(u => { %>
+        <tr>
+          <td><%= u.id %></td>
+          <td><%= u.email %></td>
+          <td><%= u.premium_until ? new Date(u.premium_until).toLocaleString() : '-' %></td>
+        </tr>
+      <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3 class="title">All Users</h3>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Email</th>
+          <th>Created</th>
+          <th>Trial ends</th>
+          <th>Premium until</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+      <% users.forEach(u => { %>
+        <tr>
+          <td><%= u.id %></td>
+          <td><%= u.email %></td>
+          <td><%= new Date(u.created_at).toLocaleString() %></td>
+          <td><%= new Date(u.trial_started_at + 24*60*60*1000).toLocaleString() %></td>
+          <td><%= u.premium_until ? new Date(u.premium_until).toLocaleString() : '-' %></td>
+          <td style="display:flex;gap:8px">
+            <form action="/admin/grant/<%= u.id %>" method="post"><button class="btn" type="submit">Grant 1 mo</button></form>
+            <form action="/admin/revoke/<%= u.id %>" method="post"><button class="btn danger" type="submit">Revoke</button></form>
+          </td>
+        </tr>
+      <% }) %>
+      </tbody>
+    </table>
+  </div>
+</section>
