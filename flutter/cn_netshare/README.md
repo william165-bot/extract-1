@@ -96,7 +96,7 @@ lib/
 ### Prerequisites
 - Flutter SDK 3.10.4 or higher
 - Dart 3.10.4 or higher
-- Android Studio / Xcode for mobile development
+- Android Studio for Android development
 
 ### Installation
 
@@ -128,19 +128,9 @@ flutter run --dart-define=API_BASE_URL=https://your-api-url.com
 flutter run
 ```
 
-#### iOS
-```bash
-flutter run
-```
-
 #### Build Release APK (Android)
 ```bash
 flutter build apk --release
-```
-
-#### Build Release IPA (iOS)
-```bash
-flutter build ios --release
 ```
 
 ## API Integration
