@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Database
+data/*.db
+data/*.db-shm
+data/*.db-wal
+
+# Environment
+.env
+.env.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Flutter build artifacts (keep source)
+flutter/cn_netshare/build/
+flutter/cn_netshare/.dart_tool/
+flutter/cn_netshare/.flutter-plugins
+flutter/cn_netshare/.flutter-plugins-dependencies
+flutter/cn_netshare/.packages
+flutter/cn_netshare/pubspec.lock
